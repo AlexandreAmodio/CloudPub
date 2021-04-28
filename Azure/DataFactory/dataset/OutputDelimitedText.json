@@ -1,0 +1,122 @@
+{
+	"name": "OutputDelimitedText",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureGestaoTableauStoragev2_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "OUTPUT_FILES",
+				"container": "gestaotableblobcontainer"
+			},
+			"columnDelimiter": ";",
+			"encodingName": "UTF-8",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "USERNAME",
+				"type": "String"
+			},
+			{
+				"name": "Nome",
+				"type": "String"
+			},
+			{
+				"name": "email_principal",
+				"type": "String"
+			},
+			{
+				"name": "Cargo",
+				"type": "String"
+			},
+			{
+				"name": "Departamento",
+				"type": "String"
+			},
+			{
+				"name": "user_TS",
+				"type": "String"
+			},
+			{
+				"name": "Nome_no_Server",
+				"type": "String"
+			},
+			{
+				"name": "email_TS",
+				"type": "String"
+			},
+			{
+				"name": "Administrador_do_Server",
+				"type": "String"
+			},
+			{
+				"name": "Data_Criacao_no_Server",
+				"type": "String"
+			},
+			{
+				"name": "Data_Ultima_Atualizacao_no_Server",
+				"type": "String"
+			},
+			{
+				"name": "Tipo_de_Licenca",
+				"type": "String"
+			},
+			{
+				"name": "Data_Ultimo_Acesso_ao_Server",
+				"type": "String"
+			},
+			{
+				"name": "User Obs",
+				"type": "String"
+			},
+			{
+				"name": "Licenca_Bloqueada",
+				"type": "String"
+			},
+			{
+				"name": "Motivo_de_bloqueio",
+				"type": "String"
+			},
+			{
+				"name": "SerialNumber",
+				"type": "String"
+			},
+			{
+				"name": "Nome_no_TableauDesktop",
+				"type": "String"
+			},
+			{
+				"name": "RegisteredEmail",
+				"type": "String"
+			},
+			{
+				"name": "LastInstalled",
+				"type": "String"
+			},
+			{
+				"name": "ProductVersion",
+				"type": "String"
+			},
+			{
+				"name": "PeriodEnd",
+				"type": "String"
+			},
+			{
+				"name": "AdjustedEmail",
+				"type": "String"
+			},
+			{
+				"name": "Notas_Desktop",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

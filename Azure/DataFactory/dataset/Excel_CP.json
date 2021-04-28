@@ -1,0 +1,48 @@
+{
+	"name": "Excel_CP",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureGestaoTableauStoragev2_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Sheet1",
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "CP_data.xlsx",
+				"folderPath": "INPUT_FILES",
+				"container": "gestaotableblobcontainer"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "SerialNumber",
+				"type": "String"
+			},
+			{
+				"name": "Nome_no_TableauDesktop",
+				"type": "String"
+			},
+			{
+				"name": "RegisteredEmail",
+				"type": "String"
+			},
+			{
+				"name": "LastInstalled",
+				"type": "String"
+			},
+			{
+				"name": "ProductVersion",
+				"type": "String"
+			},
+			{
+				"name": "PeriodEnd",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

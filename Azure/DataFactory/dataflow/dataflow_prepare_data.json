@@ -1,0 +1,107 @@
+{
+	"name": "dataflow_prepare_data",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Excel_AD",
+						"type": "DatasetReference"
+					},
+					"name": "ADData"
+				},
+				{
+					"dataset": {
+						"referenceName": "Excel_TS",
+						"type": "DatasetReference"
+					},
+					"name": "TSData"
+				},
+				{
+					"dataset": {
+						"referenceName": "Excel_USER_NOTES",
+						"type": "DatasetReference"
+					},
+					"name": "UserNotesData"
+				},
+				{
+					"dataset": {
+						"referenceName": "Excel_BLOCKEDS",
+						"type": "DatasetReference"
+					},
+					"name": "BlockedsData"
+				},
+				{
+					"dataset": {
+						"referenceName": "Excel_CP",
+						"type": "DatasetReference"
+					},
+					"name": "CPData"
+				},
+				{
+					"dataset": {
+						"referenceName": "Excel_DE_PARA",
+						"type": "DatasetReference"
+					},
+					"name": "DEPARAData"
+				},
+				{
+					"dataset": {
+						"referenceName": "Excel_DESK_NOTES",
+						"type": "DatasetReference"
+					},
+					"name": "DeskNotesData"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "OutputDelimitedText",
+						"type": "DatasetReference"
+					},
+					"name": "sinkFinalFile"
+				}
+			],
+			"transformations": [
+				{
+					"name": "JoinADTS"
+				},
+				{
+					"name": "DerivedColumn1"
+				},
+				{
+					"name": "JoinBigTableUserNotes"
+				},
+				{
+					"name": "JoinBTBlockeds"
+				},
+				{
+					"name": "JoinCPDEPARA"
+				},
+				{
+					"name": "DerivedColumnDEPARA"
+				},
+				{
+					"name": "JoinCP"
+				},
+				{
+					"name": "JoinDeskNotes"
+				},
+				{
+					"name": "SelectFinal"
+				},
+				{
+					"name": "FilterUsefullData"
+				},
+				{
+					"name": "LimpaReturns"
+				},
+				{
+					"name": "DPDiretoria"
+				}
+			],
+			"script": "source(output(\n\t\tUSERNAME as string,\n\t\tNome as string,\n\t\temail_principal as string,\n\t\tCargo as string,\n\t\tDepartamento as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> ADData\nsource(output(\n\t\tuser_TS as string,\n\t\tNome_no_Server as string,\n\t\temail_TS as string,\n\t\tAdministrador_do_Server as string,\n\t\tData_Criacao_no_Server as date 'yyyy-MM-dd',\n\t\tData_Ultima_Atualizacao_no_Server as date 'yyyy-MM-dd',\n\t\tTipo_de_Licenca as string,\n\t\tData_Ultimo_Acesso_ao_Server as date 'yyyy-MM-dd'\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> TSData\nsource(output(\n\t\tUserID as string,\n\t\tObs as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> UserNotesData\nsource(output(\n\t\tNome_bloqueado as string,\n\t\tLicenca_Bloqueada as string,\n\t\tMotivo_de_bloqueio as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> BlockedsData\nsource(output(\n\t\tSerialNumber as string,\n\t\tNome_no_TableauDesktop as string,\n\t\tRegisteredEmail as string,\n\t\tLastInstalled as string,\n\t\tProductVersion as string,\n\t\tPeriodEnd as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> CPData\nsource(output(\n\t\tDE as string,\n\t\tPARA as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> DEPARAData\nsource(output(\n\t\tSerialNumber as string,\n\t\tNotas_Desktop as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> DeskNotesData\nADData, TSData join(USERNAME == user_TS,\n\tjoinType:'outer',\n\tbroadcast: 'auto')~> JoinADTS\nJoinADTS derive(USERNAME = coalesce(USERNAME,user_TS,\"NOT_FOUND\"),\n\t\tNome = coalesce(Nome,Nome_no_Server,\"NOT_FOUND\"),\n\t\temail_principal = coalesce(email_principal,email_TS,\"NOT_FOUND\"),\n\t\tuser_TS = coalesce(user_TS,\"NOT_FOUND\"),\n\t\temail_TS = coalesce(email_TS,\"NOT_FOUND\")) ~> DerivedColumn1\nDerivedColumn1, UserNotesData join(USERNAME == UserID,\n\tjoinType:'left',\n\tbroadcast: 'auto')~> JoinBigTableUserNotes\nJoinBigTableUserNotes, BlockedsData join(Nome == Nome_bloqueado,\n\tjoinType:'left',\n\tbroadcast: 'auto')~> JoinBTBlockeds\nCPData, DEPARAData join(RegisteredEmail == DE,\n\tjoinType:'left',\n\tbroadcast: 'auto')~> JoinCPDEPARA\nJoinCPDEPARA derive(AdjustedEmail = coalesce(PARA,RegisteredEmail,\"NOT_FOUND\")) ~> DerivedColumnDEPARA\nJoinBTBlockeds, DerivedColumnDEPARA join(email_principal == AdjustedEmail,\n\tjoinType:'outer',\n\tbroadcast: 'auto')~> JoinCP\nJoinCP, LimpaReturns join(CPData@SerialNumber == DeskNotesData@SerialNumber,\n\tjoinType:'left',\n\tbroadcast: 'auto')~> JoinDeskNotes\nJoinDeskNotes select(mapColumn(\n\t\tUSERNAME,\n\t\tNome,\n\t\temail_principal,\n\t\tCargo,\n\t\tDepartamento,\n\t\tuser_TS,\n\t\tNome_no_Server,\n\t\temail_TS,\n\t\tAdministrador_do_Server,\n\t\tData_Criacao_no_Server,\n\t\tData_Ultima_Atualizacao_no_Server,\n\t\tTipo_de_Licenca,\n\t\tData_Ultimo_Acesso_ao_Server,\n\t\t{User Obs} = Obs,\n\t\tLicenca_Bloqueada,\n\t\tMotivo_de_bloqueio,\n\t\tSerialNumber = CPData@SerialNumber,\n\t\tNome_no_TableauDesktop,\n\t\tRegisteredEmail,\n\t\tLastInstalled,\n\t\tProductVersion,\n\t\tPeriodEnd,\n\t\tAdjustedEmail,\n\t\tNotas_Desktop\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectFinal\nSelectFinal filter(not((isNull(SerialNumber)) && user_TS == \"NOT_FOUND\")) ~> FilterUsefullData\nDeskNotesData derive(Notas_Desktop = replace(Notas_Desktop,\"\\n\", \"--\")) ~> LimpaReturns\nFilterUsefullData derive(SiglaDepartamento = split(Departamento,'-')[1],\n\t\tDiretoria = left(Departamento,2)) ~> DPDiretoria\nDPDiretoria sink(input(\n\t\tUSERNAME as string,\n\t\tNome as string,\n\t\temail_principal as string,\n\t\tCargo as string,\n\t\tDepartamento as string,\n\t\tuser_TS as string,\n\t\tNome_no_Server as string,\n\t\temail_TS as string,\n\t\tAdministrador_do_Server as string,\n\t\tData_Criacao_no_Server as string,\n\t\tData_Ultima_Atualizacao_no_Server as string,\n\t\tTipo_de_Licenca as string,\n\t\tData_Ultimo_Acesso_ao_Server as string,\n\t\t{User Obs} as string,\n\t\tLicenca_Bloqueada as string,\n\t\tMotivo_de_bloqueio as string,\n\t\tSerialNumber as string,\n\t\tNome_no_TableauDesktop as string,\n\t\tRegisteredEmail as string,\n\t\tLastInstalled as string,\n\t\tProductVersion as string,\n\t\tPeriodEnd as string,\n\t\tAdjustedEmail as string,\n\t\tNotas_Desktop as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['Output.csv'],\n\ttruncate: true,\n\tpartitionBy('hash', 1),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sinkFinalFile"
+		}
+	}
+}

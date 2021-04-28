@@ -1,0 +1,25 @@
+{
+	"name": "trigger_by_storage",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Gestao Tableau pipeline",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/gestaotableblobcontainer/blobs/INPUT_FILES/",
+			"blobPathEndsWith": "ALL_DONE.json",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/2d6f8de6-e74c-4d76-b3ac-4d0036e729e0/resourceGroups/GestaoTableau/providers/Microsoft.Storage/storageAccounts/gestaotableaustoragev2",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}

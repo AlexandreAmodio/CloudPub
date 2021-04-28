@@ -1,0 +1,32 @@
+{
+	"name": "Excel_DE_PARA",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureGestaoTableauStoragev2_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Sheet1",
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "DE_PARA_data.xlsx",
+				"folderPath": "INPUT_FILES",
+				"container": "gestaotableblobcontainer"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "DE",
+				"type": "String"
+			},
+			{
+				"name": "PARA",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

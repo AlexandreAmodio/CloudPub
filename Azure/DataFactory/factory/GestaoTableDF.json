@@ -1,0 +1,9 @@
+{
+	"name": "GestaoTableDF",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "44103fec-2a32-482b-ace6-efab112707a6",
+		"tenantId": "93546618-e20a-4fd3-a884-9e33ca7234a7"
+	}
+}

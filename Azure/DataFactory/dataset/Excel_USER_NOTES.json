@@ -1,0 +1,32 @@
+{
+	"name": "Excel_USER_NOTES",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureGestaoTableauStoragev2_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Sheet1",
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "USERNOTES_data.xlsx",
+				"folderPath": "INPUT_FILES",
+				"container": "gestaotableblobcontainer"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "UserID",
+				"type": "String"
+			},
+			{
+				"name": "Obs",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

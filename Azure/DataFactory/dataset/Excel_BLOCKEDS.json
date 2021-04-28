@@ -1,0 +1,36 @@
+{
+	"name": "Excel_BLOCKEDS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureGestaoTableauStoragev2_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Sheet1",
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "BLOCKEDS_data.xlsx",
+				"folderPath": "INPUT_FILES",
+				"container": "gestaotableblobcontainer"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "Nome_bloqueado",
+				"type": "String"
+			},
+			{
+				"name": "Licenca_Bloqueada",
+				"type": "String"
+			},
+			{
+				"name": "Motivo_de_bloqueio",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,56 @@
+{
+	"name": "Excel_TS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureGestaoTableauStoragev2_ls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Sheet1",
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "TS_data.xlsx",
+				"folderPath": "INPUT_FILES",
+				"container": "gestaotableblobcontainer"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "user_TS",
+				"type": "String"
+			},
+			{
+				"name": "Nome_no_Server",
+				"type": "String"
+			},
+			{
+				"name": "email_TS",
+				"type": "String"
+			},
+			{
+				"name": "Administrador_do_Server",
+				"type": "String"
+			},
+			{
+				"name": "Data_Criacao_no_Server",
+				"type": "String"
+			},
+			{
+				"name": "Data_Ultima_Atualizacao_no_Server",
+				"type": "String"
+			},
+			{
+				"name": "Tipo_de_Licenca",
+				"type": "String"
+			},
+			{
+				"name": "Data_Ultimo_Acesso_ao_Server",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
